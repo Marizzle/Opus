@@ -47,15 +47,14 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 
         <script>
+            var table;
             $(window).load(function() {
                 $(".loader").fadeOut("slow");
             })
 
             $(document).ready(function() {
-                $('#example').dataTable({
-                    "pagingType": "simple",
-                    "lengthMenu": [ [10, 25, 50,100,250,500,1000, -1], [10, 25, 50,100,250,500,1000, "All"] ]
-                });
+
+
             } );
 
         </script>
@@ -124,7 +123,7 @@
                         <div style="text-align: left" class="col-md-6">
                             <h2  class="alt"> Explore Data</h2>
 
-                            <a  style="display: none" href="#portfolio" data-toggle="modal" data-target=".bs-example-modal-lg" class="btn btn-small btn-circle button scrolly"><i class="icon fa-music">&nbsp; </i>Filter Songs</a>
+                            <a href="#portfolio" data-toggle="modal" data-target=".bs-example-modal-lg" class="btn btn-small btn-circle button scrolly"><i class="icon fa-music">&nbsp; </i>Filter Songs</a>
                         </div>
 
                         <br>
@@ -201,11 +200,7 @@
 
 
 
-
-
-
                             <script>
-                                var data = "http://www.visualizethisfor.me/data.csv";
                                 var activesongs = [];
                                 var artists = [];
                                 var songs = [];
@@ -215,6 +210,13 @@
                                 var dateFormat = d3.time.format("%m/%d/%Y");
                                 var timeFormat = d3.time.format("%I:%Mam");
                                 var timeFormat2 = d3.time.format("%I:%Mpm");
+
+
+                                var t = $('#example').DataTable({
+                                    "pagingType": "simple",
+                                    "lengthMenu": [ [10, 25, 50,100,250,500,1000, -1], [10, 25, 50,100,250,500,1000, "All"] ]
+                                })
+
                                 d3.csv("data/data.csv", function (data) {
                                     // format our data
 
@@ -242,10 +244,21 @@
 
 
                                         if(songs.indexOf(d.Track) < 0){
-                                            $('#example> tbody:last').append('<tr><td><input class="checkbox" name="songs" id="' + d.Artista + d.Track + '"  type="checkbox"></td><td>' + d.Track + '</td><td>' +  d.Artista+ '</td></tr>');
+
+
+                                            t.row.add( [
+                                                '<input class="checkbox" name="songs" id="' + d.Artista + d.Track + '"  type="checkbox">',
+                                                d.Track,
+                                                d.Artista
+                                            ] )
+
+
                                             songs.push(d.Track);
                                         }
                                     });
+
+
+                                    t.draw();
 
 
 
