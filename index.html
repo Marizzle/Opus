@@ -242,7 +242,7 @@
 
 
                                         if(songs.indexOf(d.Track) < 0){
-                                            $('#example> tbody:last').append('<tr><td><input class="checkbox" name="songs" id="' + d.Artista + d.Track + '"  type="checkbox" checked="true"></td><td>' + d.Track + '</td><td>' +  d.Artista+ '</td></tr>');
+                                            $('#example> tbody:last').append('<tr><td><input class="checkbox" name="songs" id="' + d.Artista + d.Track + '"  type="checkbox"></td><td>' + d.Track + '</td><td>' +  d.Artista+ '</td></tr>');
                                             songs.push(d.Track);
                                         }
                                     });
@@ -470,6 +470,8 @@
                                     }).get();
 
 
+                                    console.log(activesongs);
+
                                     redrawVis();
                                 }
 
@@ -523,12 +525,17 @@
                                         var hourChart1 = dc.pieChart("#hour-chart1");
                                         var hourChart2 = dc.barChart("#hour-chart2");
 
-
                                         var songChart = dc.barChart("#songs-per-day-chart");
                                         var lineChart = dc.barChart("#songs-line-chart");
 
                                         // Run the data through crossfilter and load our 'facts'
                                         var facts = crossfilter(data);
+
+
+                                        console.log(activesongs);
+                                        var filtered = facts.dimension(function (d) {
+                                            return activesongs.indexOf(d.Artista+ d.Track) > -1;
+                                        });
 
 
                                         //Day Dimension
@@ -683,7 +690,7 @@
                                         // Render the Charts
                                         dc.renderAll();
 
-                                        console.log(artists);
+
 
 
                                         var rowTip = d3.tip()
